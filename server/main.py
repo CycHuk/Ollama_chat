@@ -1,10 +1,11 @@
 from fastapi import FastAPI
-from routes import chat
+from routes import chat, message
 
 
 app = FastAPI()
 
 app.include_router(chat.router)
+app.include_router(message.router)
 
 if __name__ == "__main__":
     import uvicorn

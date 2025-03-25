@@ -7,9 +7,11 @@ def create_message(chat_id, writer, message):
         cursor.execute(insert_query, (chat_id, writer, message))
         connection.commit()
 
-def get_messages(chat_id):
+
+def get_messages(chat_id, limit=10):
     with connection.cursor() as cursor:
-        select_query = "SELECT * FROM messages WHERE chat_id = %s ORDER BY created_at;"
-        cursor.execute(select_query, (chat_id,))
+        select_query = "SELECT * FROM messages WHERE chat_id = %s ORDER BY created_at DESC LIMIT %s"
+        cursor.execute(select_query, (chat_id, limit))
         result = cursor.fetchall()
-        return result
+
+        return result[::-1]
