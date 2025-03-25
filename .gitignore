@@ -1,1 +1,11 @@
 .env
+.idea
+.venv
+
+server/.env
+server/.idea
+server/.venv
+
+*.pyc
+*.pyo
+
