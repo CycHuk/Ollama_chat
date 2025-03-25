@@ -13,7 +13,6 @@ router = APIRouter(tags=["Chat"])
 def create_chat():
     try:
         chat = db.chat.create_chat()
-        print(chat)
 
         return Chat(**chat).to_dict()
 

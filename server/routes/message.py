@@ -42,6 +42,9 @@ async def create_messages(request: MessageRequest, background_tasks: BackgroundT
         if not chat["id"]:
             raise HTTPException(status_code=400, detail="Чат не найден")
 
+        if not chat["can_user_write"]:
+            raise HTTPException(status_code=400, detail="Дождитесь ответа")
+        
         message = request.message
         db.message.create_message(chat["id"], "user", message)
 
