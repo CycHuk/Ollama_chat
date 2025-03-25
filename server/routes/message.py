@@ -47,7 +47,8 @@ async def create_messages(request: MessageRequest, background_tasks: BackgroundT
 
         await ws_message.send_json(chat_id, message, "user")
 
-        background_tasks.add_task(send_chat, chat["id"], message)
+        if chat["response_by"] == "bot":
+            background_tasks.add_task(send_chat, chat["id"], message)
 
         return Response(status_code=200)
 
