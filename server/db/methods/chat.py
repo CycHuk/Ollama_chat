@@ -3,13 +3,13 @@ from db.connection import connection
 
 def create_chat():
     with connection.cursor() as cursor:
-        cursor.execute("INSERT INTO `chats` () VALUES ();")
+        cursor.execute("INSERT INTO `chats` (title) VALUES ('Новый чат');")
 
         cursor.execute("SELECT * FROM `chats` WHERE `id` = LAST_INSERT_ID();")
         chat = cursor.fetchone()
-        connection.commit()
 
         return chat
+
 
 def get_chat(chat_id):
     with connection.cursor() as cursor:
