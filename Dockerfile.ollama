@@ -1,0 +1,5 @@
+FROM ollama/ollama
+
+ARG MODEL_NAME
+
+RUN ollama serve & sleep 5 && ollama run $MODEL_NAME
