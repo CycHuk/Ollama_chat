@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import Response
 from pydantic import BaseModel
+from sockets import message as ws_message
 import db
 
 class ChatRequest(BaseModel):
@@ -41,6 +42,8 @@ async def create_messages(request: MessageRequest):
 
         message = request.message
         db.message.create_message(chat["id"], "user", message)
+
+        await ws_message.send_json(chat_id, message, "user")
 
         return Response(status_code=200)
 
