@@ -1,20 +1,30 @@
 from db.connection import connection
 from db.models import Chat
 from sockets import chat as chat_socket
+import uuid
 
 
 def create_chat():
+    unique_id = uuid.uuid4()
+
     with connection.cursor() as cursor:
-        cursor.execute("INSERT INTO `chats` (title) VALUES ('Новый чат');")
+        cursor.execute("SELECT COUNT(*) FROM `chats` WHERE `id` = %s;", (unique_id,))
+        count = cursor.fetchone()
+        
+        while count["COUNT(*)"] > 0:
+            unique_id = uuid.uuid4()
+            cursor.execute("SELECT COUNT(*) FROM `chats` WHERE `id` = %s;", (unique_id,))
+            count = cursor.fetchone()
+
+        cursor.execute("INSERT INTO `chats` (id, title) VALUES (%s, %s);", (unique_id, 'Новый чат'))
+
+        cursor.execute("SELECT * FROM `chats` WHERE `id` = %s;", (unique_id,))
+        chat = cursor.fetchone()
 
         connection.commit()
 
-    with connection.cursor() as cursor:
-
-        cursor.execute("SELECT * FROM chats ORDER BY created_at DESC LIMIT 1;")
-        chat = cursor.fetchone()
-
         return chat
+    
 
 
 def get_chat(chat_id):
