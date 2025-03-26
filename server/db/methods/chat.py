@@ -7,7 +7,11 @@ def create_chat():
     with connection.cursor() as cursor:
         cursor.execute("INSERT INTO `chats` (title) VALUES ('Новый чат');")
 
-        cursor.execute("SELECT * FROM `chats` WHERE `id` = LAST_INSERT_ID();")
+        connection.commit()
+
+    with connection.cursor() as cursor:
+
+        cursor.execute("SELECT * FROM chats ORDER BY created_at DESC LIMIT 1;")
         chat = cursor.fetchone()
 
         return chat
