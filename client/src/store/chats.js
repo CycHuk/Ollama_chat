@@ -31,6 +31,14 @@ const useChatsStore = defineStore('chats', () => {
 
             socket.onmessage = (event) => {
                 console.log("Новое сообщение:", event.data);
+
+                const chat = JSON.parse(event.data);
+
+                const index = chats.value.findIndex(c => c.id === chat.id);
+                if (index !== -1) {
+                    chats.value[index] = { ...chat };
+                }
+
             };
 
             socket.onerror = (error) => {
