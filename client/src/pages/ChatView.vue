@@ -1,9 +1,6 @@
 <script setup>
 import InputField from "@/components/chat/InputField.vue";
 import MainField from "@/components/chat/MainField.vue";
-import useChatsStore from "@/store/chats.js";
-
-const ChatsStore = useChatsStore()
 
 </script>
 
