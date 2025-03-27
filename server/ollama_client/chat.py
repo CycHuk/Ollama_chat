@@ -30,7 +30,7 @@ async def chat(chat_id: str, user_message: str):
 
         """
 
-        db.chat.update_chat(chat_id, can_user_write=False)
+        await db.chat.update_chat(chat_id, can_user_write=False)
         db.message.create_message(chat_id, "bot",  load)
         await message.send_json(chat_id, load, "bot", streaming=True)
         stream  = await client.chat(model=model, messages = [
@@ -52,4 +52,4 @@ async def chat(chat_id: str, user_message: str):
 
     finally:
         print("123")
-        db.chat.update_chat(chat_id, can_user_write=True)
+        await db.chat.update_chat(chat_id, can_user_write=True)
