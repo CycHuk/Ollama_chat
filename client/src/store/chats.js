@@ -1,14 +1,47 @@
 import { defineStore } from 'pinia'
-import {computed, ref, watchEffect} from "vue";
+import {computed, ref, watch } from "vue";
 import axiosInterface from "@/api/index.js";
+import { useWebSocket } from "@vueuse/core";
 
 const useChatsStore = defineStore('chats', () => {
     const chats = ref([]);
     const active = ref(0);
+    let socket = null;
 
     const activeChat = computed(() => chats.value[active.value]);
 
-    const socketUrl  = computed(() => `${import.meta.env.VITE_WS}/ws/chat/${activeChat.value.id}`);
+    const socketUrl = computed(() =>
+        activeChat.value?.id
+            ? `${import.meta.env.VITE_WS}/ws/chat/${activeChat.value.id}`
+            : ""
+    );
+
+    watch(socketUrl, (newUrl) => {
+        if (socket) {
+            socket.close();
+            socket = null;
+        }
+
+        if (newUrl) {
+            socket = new WebSocket(newUrl);
+
+            socket.onopen = () => {
+                console.log("WebSocket подключен");
+            };
+
+            socket.onmessage = (event) => {
+                console.log("Новое сообщение:", event.data);
+            };
+
+            socket.onerror = (error) => {
+                console.error("Ошибка WebSocket:", error);
+            };
+
+            socket.onclose = () => {
+                console.log("WebSocket закрыт");
+            };
+        }
+    }, { immediate: true });
 
     const saveChats = () => {
         localStorage.setItem("chats", JSON.stringify(chats.value.map(chat => chat.id)));
@@ -70,7 +103,7 @@ const useChatsStore = defineStore('chats', () => {
 
     loadChats();
 
-    return { chats, createChat, deleteChat, activeChat, selectChat, active, socketUrl };
+    return { chats, createChat, deleteChat, activeChat, selectChat, active };
 });
 
 export default useChatsStore;

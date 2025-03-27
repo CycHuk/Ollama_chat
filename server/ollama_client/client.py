@@ -1,6 +1,6 @@
-from ollama import Client
+from ollama import AsyncClient
 from .config import host
 
-client = Client(
+client = AsyncClient(
   host=host,
 )

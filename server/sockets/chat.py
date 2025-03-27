@@ -23,6 +23,10 @@ async def websocket_endpoint(websocket: WebSocket, chat_id: str):
             del active_connections[chat_id]
 
 async def send_json(chat_id: str, chat:dict):
+
+    if chat_id not in active_connections:
+        return
+
     for websocket in active_connections[chat_id]:
         try:
             await websocket.send_json(chat)
