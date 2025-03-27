@@ -22,8 +22,14 @@ async def websocket_endpoint(websocket: WebSocket, chat_id: str):
         if not active_connections[chat_id]:
             del active_connections[chat_id]
 
+
 async def send_json(chat_id: str, message: str, role: str, streaming: bool = False):
-    for websocket in active_connections[chat_id]:
+
+    if chat_id not in active_connections:
+        return
+
+    connections = active_connections.get(chat_id, []).copy() 
+    for websocket in connections:
         try:
             await websocket.send_json({
                 "role": role,
@@ -31,4 +37,7 @@ async def send_json(chat_id: str, message: str, role: str, streaming: bool = Fal
                 "streaming": streaming
             })
         except:
-            active_connections[chat_id].remove(websocket)
+            active_connections[chat_id].remove(websocket) 
+            if not active_connections[chat_id]: 
+                del active_connections[chat_id]
+
