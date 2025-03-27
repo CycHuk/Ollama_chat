@@ -15,6 +15,10 @@ const useMessageStore = defineStore("messageStore", () => {
             : ""
     );
 
+    watch(messages, (newUrl) => {
+        ChatStore.scrollChat()
+    })
+
     watch(
         () => ChatStore.activeChat,
         async (newVal) => {
@@ -46,6 +50,7 @@ const useMessageStore = defineStore("messageStore", () => {
                 }
 
                 messages.value.push(message);
+                ChatStore.scrollChat()
             };
 
             socket.onerror = (error) => {
