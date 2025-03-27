@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import {computed, ref, watch } from "vue";
+import {computed, nextTick, ref, watch} from "vue";
 import axiosInterface from "@/api/index.js";
 import { useWebSocket } from "@vueuse/core";
 
@@ -31,6 +31,14 @@ const useChatsStore = defineStore('chats', () => {
 
             socket.onmessage = (event) => {
                 console.log("Новое сообщение:", event.data);
+
+                const chat = JSON.parse(event.data);
+
+                const index = chats.value.findIndex(c => c.id === chat.id);
+                if (index !== -1) {
+                    chats.value[index] = { ...chat };
+                }
+
             };
 
             socket.onerror = (error) => {
@@ -101,9 +109,18 @@ const useChatsStore = defineStore('chats', () => {
         }
     };
 
+    const scrollChat  = () => {
+        nextTick(() => {
+            const block = document.getElementById('chat');
+
+            block.scrollTop = block.scrollHeight;
+        })
+    }
+
     loadChats();
 
-    return { chats, createChat, deleteChat, activeChat, selectChat, active };
+
+    return { chats, createChat, deleteChat, activeChat, selectChat, active, scrollChat };
 });
 
 export default useChatsStore;

@@ -54,6 +54,19 @@ services:
       - db
       - ollama
 
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        HOST: ${HOST}
+    container_name: vue_client
+    restart: always
+    ports:
+      - "80:80"     
+    depends_on:
+      - server
+
 volumes:
   ollama_data:
   db_data:
