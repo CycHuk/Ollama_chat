@@ -35,7 +35,7 @@ def get_chat(chat_id):
         return chat
 
 
-async def update_chat(chat_id, title=None, can_user_write=None, response_by=None):
+def update_chat(chat_id, title=None, can_user_write=None, response_by=None):
     with connection.cursor() as cursor:
         update_fields = []
         update_values = []
@@ -64,7 +64,7 @@ async def update_chat(chat_id, title=None, can_user_write=None, response_by=None
 
         chat = Chat(**chat).to_dict()
         print(chat)
-        await chat_socket.send_json(chat['id'], chat)
+        chat_socket.send_json(chat['id'], chat)
 
 
 

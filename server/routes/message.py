@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 from fastapi.responses import Response
 from pydantic import BaseModel
+import asyncio
 
 from ollama_client import chat as send_chat
 from sockets import message as ws_message
@@ -34,7 +35,7 @@ def get_messages(request: ChatRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/messages/create")
-async def create_messages(request: MessageRequest, background_tasks: BackgroundTasks):
+def create_messages(request: MessageRequest, background_tasks: BackgroundTasks):
     try:
         chat_id = request.id
         chat = db.chat.get_chat(chat_id)
@@ -46,9 +47,9 @@ async def create_messages(request: MessageRequest, background_tasks: BackgroundT
             raise HTTPException(status_code=400, detail="Дождитесь ответа")
 
         message = request.message
-        db.message.create_message(chat["id"], "user", message)
 
-        await ws_message.send_json(chat_id, message, "user")
+        background_tasks.add_task(ws_message.send_json, chat_id, message, "user")
+        db.message.create_message(chat["id"], "user", message)
 
         if chat["response_by"] == "bot":
             background_tasks.add_task(send_chat, chat["id"], message)

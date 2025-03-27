@@ -32,7 +32,7 @@ async def send_json(chat_id: str, message: str, role: str, streaming: bool = Fal
     for websocket in connections:
         try:
             await websocket.send_json({
-                "role": role,
+                "writer": role,
                 "message": message,
                 "streaming": streaming
             })
