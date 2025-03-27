@@ -60,7 +60,7 @@ const useMessageStore = defineStore("messageStore", () => {
 
     const loadMessages = async (chatId) => {
         await axiosInterface.post("/messages", {id: chatId}).then((response) => {
-            messages.value = response.data;
+            messages.value = response.data.sort((a, b) => a.id - b.id);
         });
     };
 
