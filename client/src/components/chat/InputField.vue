@@ -26,19 +26,19 @@ const sendMessage = async () => {
 
 
 <template>
-  <div class="flex justify-between items-center w-full py-2">
+  <div class="flex justify-between items-center w-full pt-2">
     <input
         v-model="inputField"
-        class="flex-1 px-4 py-2 bg-slate-50 border border-slate-500 rounded-lg focus:outline-none focus:border-slate-600"
+        class="flex-1 px-2 sm:px-4 py-2 bg-slate-50 border border-slate-500 rounded-lg focus:outline-none focus:border-slate-600"
         placeholder="Введите сообщение..."
     />
     <button
         @click="sendMessage"
         :class="ChatStore.activeChat && ChatStore.activeChat.can_user_write ? 'bg-blue-500 hover:bg-blue-600' : 'bg-stone-500'"
-        class="ml-4 px-6 py-2  text-white font-semibold rounded-lg shadow-md  transition-all"
+        class="ml-2 sm:ml-4 px-2 sm:px-6 py-2  text-white font-semibold rounded-lg shadow-md  transition-all"
         :disabled="!ChatStore.activeChat || !ChatStore.activeChat.can_user_write"
     >
-      Отправить
+      ➤
     </button>
   </div>
 </template>

@@ -113,7 +113,9 @@ const useChatsStore = defineStore('chats', () => {
         nextTick(() => {
             const block = document.getElementById('chat');
 
-            block.scrollTop = block.scrollHeight;
+            if (block) {
+                block.scrollTop = block.scrollHeight;
+            }
         })
     }
 
