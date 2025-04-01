@@ -31,6 +31,8 @@ const sendMessage = async () => {
         v-model="inputField"
         class="flex-1 px-2 sm:px-4 py-2 bg-slate-50 border border-slate-500 rounded-lg focus:outline-none focus:border-slate-600"
         placeholder="Введите сообщение..."
+        @keyup.enter="sendMessage"
+        :disabled="!ChatStore.activeChat || !ChatStore.activeChat.can_user_write"
     />
     <button
         @click="sendMessage"
